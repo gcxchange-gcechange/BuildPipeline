@@ -29,24 +29,23 @@ stages:
 
 ############################################################
 ## updates the required libraryId for .yo-rc.json using cipher.json
+## updates the required id, name, zippedPackage for package-solution.json using cipher.json
 ############################################################
         - script: |
-            echo "Installing jq..."
+            echo "Installing jq"
             sudo apt-get update && sudo apt-get install -y jq
-          displayName: Install jq
 
-        - script: |
-            echo "Reading libraryId from cipher.json..."
-            LIBRARY_ID=$(jq -r '.libraryId' $(Build.SourcesDirectory)/config/environment/cipher.json)
+            echo "Setting file paths"
+            YO_RC_FILE= $(Build.SourcesDirectory)/.yo-rc.json
+            PACKAGE_FILE = $(Build.SourcesDirectory)/config/package-solution.json
+            CIPHER_FILE = $(Build.SourcesDirectory)/config/environment/cipher.json
+
+            echo "Read libraryId from cipher.json"
+            LIBRARY_ID=$(jq -r '.libraryId' $CIPHER_FILE)
             echo "Using libraryId: $LIBRARY_ID"
-          displayName: Read and Inject libraryId from cipher.json into .yo-rc.json
+            
+          displayName: Update all required (.yo-rc.json, package-solution.json, cipher.json)
 
-
-        - script: |
-            echo "Injecting libraryId from cipher.json into .yo-rc.json"
-            LIBRARY_ID=$(jq -r '.libraryId' config/environment/cipher.json)
-            jq --arg libId "$LIBRARY_ID" '.["@microsoft/generator-sharepoint"].libraryId = $libId' .yo-rc.json > temp.json && mv temp.json .yo-rc.json
-          displayName: Inject environment-specific libraryId
           
 ############################################################
 ## executes: gulp build and cleans
