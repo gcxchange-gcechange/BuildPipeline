@@ -29,22 +29,35 @@ stages:
 
 ############################################################
 ## updates the required libraryId for .yo-rc.json using cipher.json
-## updates the required id, name, zippedPackage for package-solution.json using cipher.json
+## updates the required configs (name, id, zippedPackage) for package-solution.json using cipher.json
 ############################################################
         - script: |
-            echo "Installing jq"
+            echo "Installing jq..."
             sudo apt-get update && sudo apt-get install -y jq
+          displayName: Install jq
 
-            echo "Setting file paths"
-            YO_RC_FILE= $(Build.SourcesDirectory)/.yo-rc.json
-            PACKAGE_FILE = $(Build.SourcesDirectory)/config/package-solution.json
-            CIPHER_FILE = $(Build.SourcesDirectory)/config/environment/cipher.json
-
-            echo "Read libraryId from cipher.json"
-            LIBRARY_ID=$(jq -r '.libraryId' $CIPHER_FILE)
+        - script: |
+            echo "Reading libraryId from cipher.json"
+            LIBRARY_ID=$(jq -r '.libraryId' $(Build.SourcesDirectory)/config/environment/cipher.json)
             echo "Using libraryId: $LIBRARY_ID"
-            
-          displayName: Update all required (.yo-rc.json, package-solution.json, cipher.json)
+          displayName: Read libraryId from .yo-rc.json and write to be used config
+
+
+        - script: |
+            echo "Injecting libraryId from cipher.json into .yo-rc.json"
+            LIBRARY_ID=$(jq -r '.libraryId' config/environment/cipher.json)
+            jq --arg libId "$LIBRARY_ID" '.["@microsoft/generator-sharepoint"].libraryId = $libId' .yo-rc.json > temp.json && mv temp.json .yo-rc.json
+          displayName: Inject libraryId
+        
+        - script: |
+            echo "Reading id, name, zippedPackage"
+            ID=$(jq -r '.id' config/environment/cipher.json)
+            NAME=$(jq -r '.name' config/environment/cipher.json)
+            ZIPPED_PACKAGE=$(jq -r '.zippedPackage' config/environment/cipher.json)
+            echo "Using Id: $ID"
+            echo "Using Name: $NAME"
+            echo "Using Zipped Package: $ZIPPED_PACKAGE"
+          displayName: Read id, name, zippedPackage from package-solution.json and weite to be used config
 
           
 ############################################################
