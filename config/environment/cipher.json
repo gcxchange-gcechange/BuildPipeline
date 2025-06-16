@@ -1,3 +1,6 @@
 {
-  "libraryId": "514066b8-c14d-499b-8162-ef7f5287ca9c"
+  "libraryId": "514066b8-c14d-499b-8162-ef7f5287ca9c",
+  "id": "514066b8-c14d-499b-8162-ef7f5287ca9c",
+  "name": "build-pipeline-client-side-solution-cipher",
+  "zippedPackage": "solution/build-pipeline-client-side-solution-cipher.sppkg"
 }
