@@ -58,7 +58,16 @@ stages:
             echo "Using Name: $NAME"
             echo "Using Zipped Package: $ZIPPED_PACKAGE"
           displayName: Read id, name, zippedPackage from package-solution.json and weite to be used config
-
+        
+        - script: |
+            echo "Injecting id, name, zippedPackage from cipher.json into package-solution.json"
+            ID=$(jq -r '.id' config/environment/cipher.json)
+            jq --arg id "ID" '.["@microsoft/generator-sharepoint"].id = $id' package-solution.json > temp.json && mv temp.json package-solution.json
+            NAME=$(jq -r '.name' config/environment/cipher.json)
+            jq --arg name "NAME" '.["@microsoft/generator-sharepoint"].name = $name' package-solution.json > temp.json && mv temp.json package-solution.json
+            ZIPPED_PACKAGE=$(jq -r '.zippedPackage' config/environment/cipher.json)
+            jq --arg zippedPackage "ZIPPED_PACKAGE" '.["@microsoft/generator-sharepoint"].zippedPackage = $zippedPackage' package-solution.json > temp.json && mv temp.json package-solution.json
+          displayName: Inject id, name, zippedPackage
           
 ############################################################
 ## executes: gulp build and cleans
