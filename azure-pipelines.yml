@@ -31,14 +31,23 @@ stages:
 ## udpates the required libraryId for .yo-rc.json using cipher.json
 ############################################################
         - script: |
+            echo "Installing jq..."
             sudo apt-get update && sudo apt-get install -y jq
-          displayName: Install jq
+              displayName: Install jq
 
         - script: |
-            echo "Injecting libraryId from cipher.json into .yo-rc.json"
+            echo "Reading libraryId from cipher.json..."
             LIBRARY_ID=$(jq -r '.libraryId' config/environment/cipher.json)
+
+            echo "Using libraryId: $LIBRARY_ID"
+
+            echo "Updating .yo-rc.json with new libraryId..."
             jq --arg libId "$LIBRARY_ID" '.["@microsoft/generator-sharepoint"].libraryId = $libId' .yo-rc.json > temp.json && mv temp.json .yo-rc.json
-          displayName: Inject environment-specific libraryId
+
+            echo "Updated .yo-rc.json content:"
+            cat .yo-rc.json
+              displayName: Inject libraryId from cipher.json into .yo-rc.json
+
           
 ############################################################
 ## executes: gulp build and cleans
