@@ -37,8 +37,10 @@ stages:
 
         - script: |
             echo "Reading libraryId from cipher.json..."
-            LIBRARY_ID=$(jq -r '.libraryId' config/environment/cipher.json)
-          displayName: Inject libraryId from cipher.json into .yo-rc.json
+            LIBRARY_ID=$(jq -r '.libraryId' $(Build.SourcesDirectory)/config/environment/cipher.json)
+            echo "Using libraryId: $LIBRARY_ID"
+          displayName: Read and Inject libraryId from cipher.json into .yo-rc.json
+
 
         - script: |
             echo "Injecting libraryId from cipher.json into .yo-rc.json"
