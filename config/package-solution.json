@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "build-pipeline-client-side-solution",
+    "id": "514066b8-c14d-499b-8162-ef7f5287ca9b",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.20.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "build-pipeline description"
+      },
+      "longDescription": {
+        "default": "build-pipeline description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "build-pipeline Feature",
+        "description": "The feature that activates elements of the build-pipeline solution.",
+        "id": "f531621a-ca47-45df-9fe6-2f4c2439bd38",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/build-pipeline.sppkg"
+  }
+}
