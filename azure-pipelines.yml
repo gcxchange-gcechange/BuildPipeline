@@ -89,11 +89,11 @@ stages:
         - script: |
             echo "Injecting id, title, and groupId from cipher.json into .manifest.json"
             MANIFEST_ID=$(jq -r '.webPartManifest.id' config/environment/cipher.json)            
-            jq --arg manifestid "MANIFEST_ID" '.webPartManifest.id = $manifest_id' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
+            jq --arg manifestid "$MANIFEST_ID" '.webPartManifest.id = $manifestid' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
             TITLE=$(jq -r '.webPartManifest.title' config/environment/cipher.json)
             jq --arg title "$TITLE" '.title.default = $title' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/helloBuildPipeline/loc/HelloBuildPipeline.manifest.json
             GROUP_ID=$(jq -r '.webPartManifest.groupId' config/environment/cipher.json)
-            jq --arg groupid "GROUP_ID" '.webPartManifest.id = $group_id' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
+            jq --arg groupid "$GROUP_ID" '.webPartManifest.id = $groupid' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
           displayName: Inject id, title, and groupId to .manifest.json for build
 
 ############################################################
