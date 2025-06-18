@@ -42,13 +42,13 @@ stages:
 
         - script: |
             echo "Reading libraryId from yoRc in cipher.json"
-            LIBRARY_ID=$(jq -r '.libraryId' $(Build.SourcesDirectory)/config/environment/cipher.json)
+            LIBRARY_ID=$(jq -r '.yoRc.libraryId' $(Build.SourcesDirectory)/config/environment/cipher.json)
             echo "Using libraryId: $LIBRARY_ID"
           displayName: Read libraryId from .yo-rc.json and write to be used config
 
         - script: |
             echo "Injecting libraryId from cipher.json into .yo-rc.json"
-            LIBRARY_ID=$(jq -r '.libraryId' config/environment/cipher.json)
+            LIBRARY_ID=$(jq -r 'yoRc.libraryId' config/environment/cipher.json)
             jq --arg libId "$LIBRARY_ID" '.["@microsoft/generator-sharepoint"].libraryId = $libId' .yo-rc.json > temp.json && mv temp.json .yo-rc.json
           displayName: Inject libraryId to .yo-rc.json for Build
         
@@ -56,9 +56,9 @@ stages:
 
         - script: |
             echo "Reading id, name, zippedPackage from packageSolution in cipher.json"
-            ID=$(jq -r '.id' config/environment/cipher.json)
-            NAME=$(jq -r '.name' config/environment/cipher.json)
-            ZIPPED_PACKAGE=$(jq -r '.zippedPackage' config/environment/cipher.json)
+            ID=$(jq -r '.packageSolution.id' config/environment/cipher.json)
+            NAME=$(jq -r '.packageSolution.name' config/environment/cipher.json)
+            ZIPPED_PACKAGE=$(jq -r '.packageSolution.zippedPackage' config/environment/cipher.json)
             echo "Using Id: $ID"
             echo "Using Name: $NAME"
             echo "Using Zipped Package: $ZIPPED_PACKAGE"
@@ -66,11 +66,11 @@ stages:
         
         - script: |
             echo "Injecting id, name, zippedPackage from cipher.json into package-solution.json"
-            ID=$(jq -r '.id' config/environment/cipher.json)
+            ID=$(jq -r '.packageSolution.id' config/environment/cipher.json)
             jq --arg id "ID" '.solution.id = $id' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
-            NAME=$(jq -r '.name' config/environment/cipher.json)
+            NAME=$(jq -r '.packageSolution.name' config/environment/cipher.json)
             jq --arg name "NAME" '.solution.name = $name' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
-            ZIPPED_PACKAGE=$(jq -r '.zippedPackage' config/environment/cipher.json)
+            ZIPPED_PACKAGE=$(jq -r '.packageSolution.zippedPackage' config/environment/cipher.json)
             jq --arg zippedPackage "ZIPPED_PACKAGE" '.paths.zippedPackage = $zippedPackage' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
           displayName: Inject id, name, zippedPackage to package-solution.json for build 
 
