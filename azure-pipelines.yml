@@ -30,14 +30,15 @@ stages:
 ############################################################
 ## updates the required libraryId for .yo-rc.json using cipher.json
 ## updates the required configs (name, id, zippedPackage) for package-solution.json using cipher.json
+## updates the required configs (groupId, id, title) for .manifest.json using cipher.json
 ############################################################
         - script: |
-            echo "Installing jq..."
+            echo "Installing jq"
             sudo apt-get update && sudo apt-get install -y jq
           displayName: Install jq
 
         - script: |
-            echo "Reading libraryId from cipher.json"
+            echo "Reading libraryId from yoRc in cipher.json"
             LIBRARY_ID=$(jq -r '.libraryId' $(Build.SourcesDirectory)/config/environment/cipher.json)
             echo "Using libraryId: $LIBRARY_ID"
           displayName: Read libraryId from .yo-rc.json and write to be used config
@@ -50,14 +51,14 @@ stages:
           displayName: Inject libraryId
         
         - script: |
-            echo "Reading id, name, zippedPackage"
+            echo "Reading id, name, zippedPackage from packageSolution.json"
             ID=$(jq -r '.id' config/environment/cipher.json)
             NAME=$(jq -r '.name' config/environment/cipher.json)
             ZIPPED_PACKAGE=$(jq -r '.zippedPackage' config/environment/cipher.json)
             echo "Using Id: $ID"
             echo "Using Name: $NAME"
             echo "Using Zipped Package: $ZIPPED_PACKAGE"
-          displayName: Read id, name, zippedPackage from package-solution.json and weite to be used config
+          displayName: Read id, name, zippedPackage from package-solution.json and write to be used config
         
         - script: |
             echo "Injecting id, name, zippedPackage from cipher.json into package-solution.json"
@@ -68,6 +69,16 @@ stages:
             ZIPPED_PACKAGE=$(jq -r '.zippedPackage' config/environment/cipher.json)
             jq --arg zippedPackage "ZIPPED_PACKAGE" '.paths.zippedPackage = $zippedPackage' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
           displayName: Inject id, name, zippedPackage
+          
+        - script: |
+            echo "Reading id, title, and groupId from .manifest.json"
+            MANIFEST_ID=$(jq -r '.webPartManifest.id' config/environment/cipher.json)            
+            jq --arg manifestid "MANIFEST_ID" '.webPartManifest.id = $manifest_id' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
+            TITLE=$(jq -r '.webPartManifest.title' config/environment/cipher.json)
+            jq --arg title "$TITLE" '.title.default = $title' src/helloBuildPipeline/loc/HelloBuildPipeline.manifest.json > temp.json && mv temp.json src/helloBuildPipeline/loc/HelloBuildPipeline.manifest.json
+            GROUP_ID=$(jq -r '.webPartManifest.groupId' config/environment/cipher.json)
+            jq --arg groupid "GROUP_ID" '.webPartManifest.id = $group_id' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
+          displayName: Read id, groupId, and title from .manifest.json and write to be used in config
           
 ############################################################
 ## executes: gulp build and cleans
