@@ -48,7 +48,7 @@ stages:
 
         - script: |
             echo "Injecting libraryId from cipher.json into .yo-rc.json"
-            LIBRARY_ID=$(jq -r 'yoRc.libraryId' config/environment/cipher.json)
+            LIBRARY_ID=$(jq -r '.yoRc.libraryId' config/environment/cipher.json)
             jq --arg libId "$LIBRARY_ID" '.["@microsoft/generator-sharepoint"].libraryId = $libId' .yo-rc.json > temp.json && mv temp.json .yo-rc.json
           displayName: Inject libraryId to .yo-rc.json for Build
         
