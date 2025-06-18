@@ -73,13 +73,16 @@ stages:
         - script: |
             echo "Reading id, title, and groupId from .manifest.json"
             MANIFEST_ID=$(jq -r '.webPartManifest.id' config/environment/cipher.json)            
-            jq --arg manifestid "MANIFEST_ID" '.webPartManifest.id = $manifest_id' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
             TITLE=$(jq -r '.webPartManifest.title' config/environment/cipher.json)
-            jq --arg title "$TITLE" '.title.default = $title' src/helloBuildPipeline/loc/HelloBuildPipeline.manifest.json > temp.json && mv temp.json src/helloBuildPipeline/loc/HelloBuildPipeline.manifest.json
             GROUP_ID=$(jq -r '.webPartManifest.groupId' config/environment/cipher.json)
-            jq --arg groupid "GROUP_ID" '.webPartManifest.id = $group_id' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
+            echo "Using Id: $MANIFEST_ID"
+            echo "Using Title: $TITLE"
+            echo "Using GroupId: $GROUP_ID"
           displayName: Read id, groupId, and title from .manifest.json and write to be used in config
-          
+          #            jq --arg manifestid "MANIFEST_ID" '.webPartManifest.id = $manifest_id' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
+          #            jq --arg title "$TITLE" '.title.default = $title' src/helloBuildPipeline/loc/HelloBuildPipeline.manifest.json > temp.json && mv temp.json src/helloBuildPipeline/loc/HelloBuildPipeline.manifest.json
+          #            jq --arg groupid "GROUP_ID" '.webPartManifest.id = $group_id' src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src\webparts\helloBuildPipeline\HelloBuildPipelineWebPart.manifest.json
+
 ############################################################
 ## executes: gulp build and cleans
 ############################################################
