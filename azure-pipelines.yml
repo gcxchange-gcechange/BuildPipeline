@@ -28,47 +28,74 @@ stages:
           displayName: Install npm dependencies 
 
 ############################################################
-## updates the required libraryId for .yo-rc.json using cipher.json
-## updates the required configs (name, id, zippedPackage) for package-solution.json using cipher.json
+## updates the configs
 ############################################################
+
+## installs jq, validates json at every step, integral from ensuring the write config ids are being selected
+
         - script: |
-            echo "Installing jq..."
+            echo "Installing jq"
             sudo apt-get update && sudo apt-get install -y jq
           displayName: Install jq
 
+## updates the required libraryId for .yo-rc.json using cipher.json
+
         - script: |
-            echo "Reading libraryId from cipher.json"
-            LIBRARY_ID=$(jq -r '.libraryId' $(Build.SourcesDirectory)/config/environment/cipher.json)
+            echo "Reading libraryId from yoRc in cipher.json"
+            LIBRARY_ID=$(jq -r '.yoRc.libraryId' $(Build.SourcesDirectory)/config/environment/cipher.json)
             echo "Using libraryId: $LIBRARY_ID"
           displayName: Read libraryId from .yo-rc.json and write to be used config
 
-
         - script: |
             echo "Injecting libraryId from cipher.json into .yo-rc.json"
-            LIBRARY_ID=$(jq -r '.libraryId' config/environment/cipher.json)
+            LIBRARY_ID=$(jq -r '.yoRc.libraryId' config/environment/cipher.json)
             jq --arg libId "$LIBRARY_ID" '.["@microsoft/generator-sharepoint"].libraryId = $libId' .yo-rc.json > temp.json && mv temp.json .yo-rc.json
-          displayName: Inject libraryId
+          displayName: Inject libraryId to .yo-rc.json for Build
         
+## updates the required configs (name, id, zippedPackage) for package-solution.json using cipher.json
+
         - script: |
-            echo "Reading id, name, zippedPackage"
-            ID=$(jq -r '.id' config/environment/cipher.json)
-            NAME=$(jq -r '.name' config/environment/cipher.json)
-            ZIPPED_PACKAGE=$(jq -r '.zippedPackage' config/environment/cipher.json)
+            echo "Reading id, name, zippedPackage from packageSolution in cipher.json"
+            ID=$(jq -r '.packageSolution.id' config/environment/cipher.json)
+            NAME=$(jq -r '.packageSolution.name' config/environment/cipher.json)
+            ZIPPED_PACKAGE=$(jq -r '.packageSolution.zippedPackage' config/environment/cipher.json)
             echo "Using Id: $ID"
             echo "Using Name: $NAME"
             echo "Using Zipped Package: $ZIPPED_PACKAGE"
-          displayName: Read id, name, zippedPackage from package-solution.json and weite to be used config
+          displayName: Read id, name, zippedPackage from package-solution.json and write to be used config
         
         - script: |
             echo "Injecting id, name, zippedPackage from cipher.json into package-solution.json"
-            ID=$(jq -r '.id' config/environment/cipher.json)
+            ID=$(jq -r '.packageSolution.id' config/environment/cipher.json)
             jq --arg id "ID" '.solution.id = $id' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
-            NAME=$(jq -r '.name' config/environment/cipher.json)
+            NAME=$(jq -r '.packageSolution.name' config/environment/cipher.json)
             jq --arg name "NAME" '.solution.name = $name' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
-            ZIPPED_PACKAGE=$(jq -r '.zippedPackage' config/environment/cipher.json)
-            jq --arg zippedPackage "ZIPPED_PACKAGE" '.solution.zippedPackage = $zippedPackage' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
-          displayName: Inject id, name, zippedPackage
-          
+            ZIPPED_PACKAGE=$(jq -r '.packageSolution.zippedPackage' config/environment/cipher.json)
+            jq --arg zippedPackage "ZIPPED_PACKAGE" '.paths.zippedPackage = $zippedPackage' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
+          displayName: Inject id, name, zippedPackage to package-solution.json for build 
+
+## updates the required configs (groupId, id, title) for .manifest.json using cipher.json
+        
+        - script: |
+            echo "Reading id, title, and groupId from webPartManifest"
+            MANIFEST_ID=$(jq -r '.webPartManifest.id' config/environment/cipher.json)            
+            TITLE=$(jq -r '.webPartManifest.title' config/environment/cipher.json)
+            GROUP_ID=$(jq -r '.webPartManifest.groupId' config/environment/cipher.json)
+            echo "Using Id: $MANIFEST_ID"
+            echo "Using Title: $TITLE"
+            echo "Using GroupId: $GROUP_ID"
+          displayName: Read id, groupId, and title from .manifest.json and write to be used in config
+
+        - script: |
+            echo "Injecting id, title, and groupId from cipher.json into .manifest.json"
+            MANIFEST_ID=$(jq -r '.webPartManifest.id' config/environment/cipher.json)            
+            jq --arg manifestid "$MANIFEST_ID" '.webPartManifest.id = $manifestid' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
+            TITLE=$(jq -r '.webPartManifest.title' config/environment/cipher.json)
+            jq --arg title "$TITLE" '.title.default = $title' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/helloBuildPipeline/loc/HelloBuildPipeline.manifest.json
+            GROUP_ID=$(jq -r '.webPartManifest.groupId' config/environment/cipher.json)
+            jq --arg groupid "$GROUP_ID" '.webPartManifest.id = $groupid' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
+          displayName: Inject id, title, and groupId to .manifest.json for build
+
 ############################################################
 ## executes: gulp build and cleans
 ############################################################
