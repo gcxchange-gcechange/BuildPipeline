@@ -66,7 +66,7 @@ stages:
             NAME=$(jq -r '.name' config/environment/cipher.json)
             jq --arg name "NAME" '.solution.name = $name' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
             ZIPPED_PACKAGE=$(jq -r '.zippedPackage' config/environment/cipher.json)
-            jq --arg zippedPackage "ZIPPED_PACKAGE" '.solution.zippedPackage = $zippedPackage' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
+            jq --arg zippedPackage "ZIPPED_PACKAGE" '.paths.zippedPackage = $zippedPackage' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
           displayName: Inject id, name, zippedPackage
           
 ############################################################
