@@ -55,10 +55,10 @@ stages:
 ## updates the required configs (name, id, zippedPackage) for package-solution.json using cipher.json
 
         - script: |
-            echo "Reading id, name, zippedPackage from packageSolution in cipher.json"
-            LIBRARY_ID=$(jq -r '.yoRc.libraryId' config/environment/cipher.json) 
-            NAME=$(jq -r '.packageSolution.name' config/environment/cipher.json)
-            ZIPPED_PACKAGE=$(jq -r '.packageSolution.zippedPackage' config/environment/cipher.json)
+            echo "Reading id, name, zippedPackage from cipher.json"
+            ID=$(jq -r '.packageSolution.solution.id' config/environment/cipher.json)
+            NAME=$(jq -r '.packageSolution.solution.name' config/environment/cipher.json)
+            ZIPPED_PACKAGE=$(jq -r '.packageSolution.paths.zippedPackage' config/environment/cipher.json)
             echo "Using Id: $ID"
             echo "Using Name: $NAME"
             echo "Using Zipped Package: $ZIPPED_PACKAGE"
@@ -66,12 +66,12 @@ stages:
         
         - script: |
             echo "Injecting id, name, zippedPackage from cipher.json into package-solution.json"
-            LIBRARY_ID=$(jq -r '.yoRc.libraryId' config/environment/cipher.json)
-            jq --arg libId "$LIBRARY_ID" '.["@microsoft/generator-sharepoint"].libraryId = $libId' .yo-rc.json > temp.json && mv temp.json .yo-rc.json
-            NAME=$(jq -r '.packageSolution.name' config/environment/cipher.json)
-            jq --arg name "NAME" '.solution.name = $name' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
-            ZIPPED_PACKAGE=$(jq -r '.packageSolution.zippedPackage' config/environment/cipher.json)
-            jq --arg zippedPackage "ZIPPED_PACKAGE" '.paths.zippedPackage = $zippedPackage' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
+            ID=$(jq -r '.packageSolution.solution.id' config/environment/cipher.json)
+            jq --arg id "$ID" '.solution.id = $id' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
+            NAME=$(jq -r '.packageSolution.solution.name' config/environment/cipher.json)
+            jq --arg name "$NAME" '.solution.name = $name' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
+            ZIPPED_PACKAGE=$(jq -r '.packageSolution.paths.zippedPackage' config/environment/cipher.json)
+            jq --arg zippedPackage "$ZIPPED_PACKAGE" '.paths.zippedPackage = $zippedPackage' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
           displayName: Inject id, name, zippedPackage to package-solution.json for build 
 
 ## updates the required configs (groupId, id, title) for .manifest.json using cipher.json
@@ -95,9 +95,6 @@ stages:
             jq --argjson title "$TITLE" '.preconfiguredEntries[0].title = $title' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
             GROUP_ID=$(jq -r '.webPartManifest.groupId' config/environment/cipher.json)
             jq --arg groupid "$GROUP_ID" '.preconfiguredEntries[0].groupId = $groupid' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
-
-            echo "Manifest after injection:"
-            cat "$MANIFEST_PATH"
           displayName: Inject id, title, and groupId to .manifest.json for build
           
 ## dumps the configs being used to verify whether the injection is successful
