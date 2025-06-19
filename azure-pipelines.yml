@@ -92,7 +92,7 @@ stages:
             MANIFEST_ID=$(jq -r '.webPartManifest.id' config/environment/cipher.json)
             jq --arg manifestid "$MANIFEST_ID" '.id = $manifestid' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
             TITLE=$(jq -r '.webPartManifest.title' config/environment/cipher.json)
-            jq --arg title "$TITLE" '.preconfiguredEntries[0].title.default = $title' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
+            jq --argjson title "$TITLE" '.preconfiguredEntries[0].title = $title' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
             GROUP_ID=$(jq -r '.webPartManifest.groupId' config/environment/cipher.json)
             jq --arg groupid "$GROUP_ID" '.preconfiguredEntries[0].groupId = $groupid' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
 
