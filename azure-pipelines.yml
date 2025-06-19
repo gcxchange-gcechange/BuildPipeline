@@ -99,12 +99,14 @@ stages:
           
 ## dumps the configs being used to verify whether the injection is successful
 
-        - script: |
-            echo "Dumping .yo-rc.json, package-solution.json, and .manifest.js"
-            cat .yo-rc.json
-            cat config/package-solution.json
-            cat src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
-          displayName: Config dump to verify successful injection
+## < !--- REMOVE FOR DUMP FILE TEST --->
+
+##        - script: |
+##            echo "Dumping .yo-rc.json, package-solution.json, and .manifest.js"
+##            cat .yo-rc.json
+##            cat config/package-solution.json
+##            cat src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
+##          displayName: Config dump to verify successful injection
 
 ############################################################
 ## executes: gulp build and cleans
