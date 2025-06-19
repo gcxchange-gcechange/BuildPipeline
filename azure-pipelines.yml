@@ -88,12 +88,16 @@ stages:
 
         - script: |
             echo "Injecting id, title, and groupId from cipher.json into .manifest.json"
-            MANIFEST_ID=$(jq -r '.webPartManifest.id' config/environment/cipher.json)            
-            jq --arg manifestid "$MANIFEST_ID" '.webPartManifest.id = $manifestid' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
+            MANIFEST_PATH=src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
+            MANIFEST_ID=$(jq -r '.webPartManifest.id' config/environment/cipher.json)
+            jq --arg manifestid "$MANIFEST_ID" '.id = $manifestid' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
             TITLE=$(jq -r '.webPartManifest.title' config/environment/cipher.json)
-            jq --arg title "$TITLE" '.preconfiguredEntries[0].title.default = $title' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/webparts/helloBuildPipeline/HelloBuildPipeline.manifest.json
+            jq --arg title "$TITLE" '.preconfiguredEntries[0].title.default = $title' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
             GROUP_ID=$(jq -r '.webPartManifest.groupId' config/environment/cipher.json)
-            jq --arg groupid "$GROUP_ID" '.preconfiguredEntries[0].groupId = $groupid' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
+            jq --arg groupid "$GROUP_ID" '.preconfiguredEntries[0].groupId = $groupid' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
+
+            echo "Manifest after injection:"
+            cat "$MANIFEST_PATH"
           displayName: Inject id, title, and groupId to .manifest.json for build
           
 ## dumps the configs being used to verify whether the injection is successful
