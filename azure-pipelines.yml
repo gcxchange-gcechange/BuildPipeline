@@ -91,7 +91,7 @@ stages:
             MANIFEST_ID=$(jq -r '.webPartManifest.id' config/environment/cipher.json)            
             jq --arg manifestid "$MANIFEST_ID" '.webPartManifest.id = $manifestid' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
             TITLE=$(jq -r '.webPartManifest.title' config/environment/cipher.json)
-            jq --arg title "$TITLE" '.preconfiguredEntries[0].title.default = $title' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/webparts/helloBuildPipeline/loc/HelloBuildPipeline.manifest.json
+            jq --arg title "$TITLE" '.preconfiguredEntries[0].title.default = $title' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/webparts/helloBuildPipeline/HelloBuildPipeline.manifest.json
             GROUP_ID=$(jq -r '.webPartManifest.groupId' config/environment/cipher.json)
             jq --arg groupid "$GROUP_ID" '.preconfiguredEntries[0].groupId = $groupid' src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json > temp.json && mv temp.json src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
           displayName: Inject id, title, and groupId to .manifest.json for build
