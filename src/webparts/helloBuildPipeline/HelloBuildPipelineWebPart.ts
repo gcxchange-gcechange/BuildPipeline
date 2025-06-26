@@ -11,6 +11,7 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 import * as strings from 'HelloBuildPipelineWebPartStrings';
 import HelloBuildPipeline from './components/HelloBuildPipeline';
 import { IHelloBuildPipelineProps } from './components/IHelloBuildPipelineProps';
+import { EnvConfig, CurrentEnv } from '../../env/generatedConfig';
 
 export interface IHelloBuildPipelineWebPartProps {
   description: string;
@@ -109,7 +110,9 @@ export default class HelloBuildPipelineWebPart extends BaseClientSideWebPart<IHe
               groupName: strings.BasicGroupName,
               groupFields: [
                 PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                  label: strings.DescriptionFieldLabel,
+                  value: EnvConfig.description,
+                  disabled: CurrentEnv !== 'dev'
                 })
               ]
             }

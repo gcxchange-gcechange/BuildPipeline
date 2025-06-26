@@ -28,7 +28,7 @@
     "features": [
       {
         "title": "build-pipeline Feature",
-        "description": "The feature that activates elements of the build-pipeline solution.",
+        "description": "",
         "id": "f531621a-ca47-45df-9fe6-2f4c2439bd38",
         "version": "1.0.0.0"
       }
