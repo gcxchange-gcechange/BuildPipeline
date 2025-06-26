@@ -165,3 +165,72 @@ stages:
             pathToPublish: $(Build.ArtifactStagingDirectory)
             artifactName: spfx-package
             publishLocation: 'Container'
+
+- stage: Dev_Deployment
+  dependsOn:
+    - Build
+  variables:
+    SpPkgFilename: $[StageDependencies.Build. build_package.outputs['GetSharePointPackage.SpPkgFilename']]
+
+  jobs:
+    - deployment: deploy_dev_sppkg
+      displayName: Deploy to Dev Environment 
+      environment: Development 
+      strategy: 
+        runOnce:
+          deploy:
+            steps:
+
+############################################################
+## installs: Office M365 CLI
+############################################################
+              - script: sudo npm install --global  @pnp/cli-microsoft365
+                displayName: Install OfficeM365 CLI
+ 
+############################################################
+## logs in: Office M365 CLI
+############################################################
+              #- task: AzureCLI@2
+                #inputs: 
+                  #azureSubscription: sharepoint_integration 
+                  #scriptLocation: 'inlineScript'
+                  #scriptType: bash
+                  #inlineScript: m365 login --authType password --userName "$ServiceAccountEmail" --password "$ServiceAccountPassword" --appId "$App" --tenant "$Tenant"
+                #displayName: Login to OfficeM365
+                #env:
+                  #App: $(AppsID)
+                  #Tenant: $(TenantsID)
+                  #CertificateID: $(Credential)
+                  #PasswordID: $(Password)
+                  #ServiceAccountEmail: $(SERVICE_ACCOUNT_EMAIL)
+                  #ServiceAccountPassword: $(SERVICE_ACCOUNT_PASSWORD)
+
+############################################################
+## logs in: Office M365 CLI
+############################################################
+              - task: AzureCLI@2
+                inputs: 
+                  azureSubscription: sharepoint_integration 
+                  scriptLocation: 'inlineScript'
+                  scriptType: bash
+                  inlineScript: m365 login --authType certificate --certificateBase64Encoded "$CertificateID" --appId "$App" --tenant "$Tenant" --password "$PasswordID"
+                displayName: Login to OfficeM365
+                env:
+                  App: $(AppsID)
+                  Tenant: $(TenantsID)
+                  CertificateID: $(Credential)
+                  PasswordID: $(Password)
+
+
+############################################################
+## uploads: the *.sppkg package to the app-catalog
+############################################################
+
+              - script: m365 spo app add --debug --verbose -p '$(Pipeline.Workspace)/spfx-package/$(SpPkgFilename)' --appCatalogUrl https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --overwrite
+                displayName: Upload to SharePoint package to the App Catalog
+
+############################################################
+## deploys: the *.sppkg package to the app-catalog
+############################################################
+              - script:  m365 spo app deploy --debug --verbose --name $(SpPkgFilename) -u https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --skipFeatureDeployment
+                displayName: Deploy to SharePoint package to the App Catalog
