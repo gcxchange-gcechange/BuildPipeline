@@ -11,7 +11,7 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 import * as strings from 'HelloBuildPipelineWebPartStrings';
 import HelloBuildPipeline from './components/HelloBuildPipeline';
 import { IHelloBuildPipelineProps } from './components/IHelloBuildPipelineProps';
-import { EnvConfig, CurrentEnv } from '../../env/generatedConfig';
+import { EnvConfig } from '../../env/generatedConfig';
 
 export interface IHelloBuildPipelineWebPartProps {
   description: string;
@@ -38,6 +38,9 @@ export default class HelloBuildPipelineWebPart extends BaseClientSideWebPart<IHe
   }
 
   protected onInit(): Promise<void> {
+    // Apply the generated config to the properties of the webpart.
+    this.applyGeneratedConfig();
+
     return this._getEnvironmentMessage().then(message => {
       this._environmentMessage = message;
     });
@@ -98,6 +101,23 @@ export default class HelloBuildPipelineWebPart extends BaseClientSideWebPart<IHe
     return Version.parse('1.0');
   }
 
+  private applyGeneratedConfig(): void {
+    const config = EnvConfig as Partial<IHelloBuildPipelineWebPartProps>;
+
+    Object.keys(config).forEach((key) => {
+      if (Object.prototype.hasOwnProperty.call(this.properties, key)) {
+        const k = key as keyof IHelloBuildPipelineWebPartProps;
+
+        const currentValue = this.properties[k];
+        const shouldApply = currentValue === undefined || currentValue === null || (typeof currentValue === 'string' && currentValue.trim() === '');
+
+        if (shouldApply) {
+          this.properties[k] = config[k]!;
+        }
+      }
+    });
+  }
+
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {
       pages: [
@@ -111,8 +131,7 @@ export default class HelloBuildPipelineWebPart extends BaseClientSideWebPart<IHe
               groupFields: [
                 PropertyPaneTextField('description', {
                   label: strings.DescriptionFieldLabel,
-                  value: EnvConfig.description,
-                  disabled: CurrentEnv !== 'dev'
+                  disabled: EnvConfig.environment === 'prod'
                 })
               ]
             }

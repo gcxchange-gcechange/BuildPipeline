@@ -1,3 +1,4 @@
 {
+    "environment": "uat",
     "description": "This is the uat environment"
 }

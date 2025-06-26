@@ -1,3 +1,4 @@
 {
+    "environment": "dev",
     "description": "This is the dev environment"
 }

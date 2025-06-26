@@ -2,6 +2,7 @@ import * as React from 'react';
 import styles from './HelloBuildPipeline.module.scss';
 import type { IHelloBuildPipelineProps } from './IHelloBuildPipelineProps';
 import { escape } from '@microsoft/sp-lodash-subset';
+import { EnvConfig } from '../../../env/generatedConfig';
 
 export default class HelloBuildPipeline extends React.Component<IHelloBuildPipelineProps> {
   public render(): React.ReactElement<IHelloBuildPipelineProps> {
@@ -20,9 +21,10 @@ export default class HelloBuildPipeline extends React.Component<IHelloBuildPipel
           <h2>Well done, {escape(userDisplayName)}!</h2>
           <div>{environmentMessage}</div>
           <div>Web part property value: <strong>{escape(description)}</strong></div>
+          <div>Generated config property value: <strong>{EnvConfig.description}</strong></div>
         </div>
         <div>
-          <h3>Welcome to SharePoint Framework!</h3>
+          <h3>{EnvConfig.description}</h3>
           <p>
             The SharePoint Framework (SPFx) is a extensibility model for Microsoft Viva, Microsoft Teams and SharePoint. It&#39;s the easiest way to extend Microsoft 365 with automatic Single Sign On, automatic hosting and industry standard tooling.
           </p>

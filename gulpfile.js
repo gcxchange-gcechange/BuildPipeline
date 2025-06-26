@@ -31,10 +31,22 @@ const generateConfigTask = build.task('generate-config', {
     const configObject = JSON.parse(configJson);
 
     const outputTs = `// This file is auto-generated from ${path.basename(configFilePath)}
-export const EnvConfig = ${JSON.stringify(configObject, null, 2)};\nexport const CurrentEnv = '${ENV}';\n`;
+export const EnvConfig = ${JSON.stringify(configObject, null, 2)};\n`;
 
-    fs.mkdirSync(path.dirname(outputTsFilePath), { recursive: true });
-    fs.writeFileSync(outputTsFilePath, outputTs, 'utf8');
+    // Only write if content has changed (prevents infinite loop)
+    let shouldWrite = true;
+    if (fs.existsSync(outputTsFilePath)) {
+      const existingContent = fs.readFileSync(outputTsFilePath, 'utf8');
+      if (existingContent === outputTs) {
+        shouldWrite = false;
+      }
+    }
+
+    if (shouldWrite) {
+      fs.mkdirSync(path.dirname(outputTsFilePath), { recursive: true });
+      fs.writeFileSync(outputTsFilePath, outputTs, 'utf8');
+      console.log(`Config written to ${outputTsFilePath}`);
+    } 
 
     return Promise.resolve();
   }
