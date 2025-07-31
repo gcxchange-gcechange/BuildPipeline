@@ -249,19 +249,20 @@ stages:
                   CertificateID: $(Credential)
                   PasswordID: $(Password)
 
-
+############################################################
+## DOES NOT WORK
 ############################################################
 ## uploads: the *.sppkg package to the app-catalog
 ############################################################
 
-              - script: m365 spo app add --debug --verbose -p '$(Pipeline.Workspace)/spfx-package/$(SpPkgFilename)' --appCatalogUrl https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --overwrite
-                displayName: Upload to SharePoint package to the App Catalog
+#              - script: m365 spo app add --debug --verbose -p '$(Pipeline.Workspace)/spfx-package/$(SpPkgFilename)' --appCatalogUrl https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --overwrite
+#                displayName: Upload to SharePoint package to the App Catalog
 
 ############################################################
 ## deploys: the *.sppkg package to the app-catalog
 ############################################################
-              - script:  m365 spo app deploy --debug --verbose --name $(SpPkgFilename) -u https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --skipFeatureDeployment
-                displayName: Deploy to SharePoint package to the App Catalog
+#              - script:  m365 spo app deploy --debug --verbose --name $(SpPkgFilename) -u https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --skipFeatureDeployment
+#                displayName: Deploy to SharePoint package to the App Catalog
 
 ############################################################
 ## UAT Deployment
@@ -298,19 +299,20 @@ stages:
                   CertificateID: $(Credential)
                   PasswordID: $(Password)
 
-
+############################################################
+## DOES NOT WORK
 ############################################################
 ## uploads: the *.sppkg package to the app-catalog
 ############################################################
 
-              - script: m365 spo app add --debug --verbose -p '$(Pipeline.Workspace)/spfx-package/$(SpPkgFilename)' --appCatalogUrl https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --overwrite
-                displayName: Upload to SharePoint package to the App Catalog
+#              - script: m365 spo app add --debug --verbose -p '$(Pipeline.Workspace)/spfx-package/$(SpPkgFilename)' --appCatalogUrl https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --overwrite
+#                displayName: Upload to SharePoint package to the App Catalog
 
 ############################################################
 ## deploys: the *.sppkg package to the app-catalog
 ############################################################
-              - script:  m365 spo app deploy --debug --verbose --name $(SpPkgFilename) -u https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --skipFeatureDeployment
-                displayName: Deploy to SharePoint package to the App Catalog
+#              - script:  m365 spo app deploy --debug --verbose --name $(SpPkgFilename) -u https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --skipFeatureDeployment
+#                displayName: Deploy to SharePoint package to the App Catalog
 
 ############################################################
 ## Prod Deployment
@@ -347,16 +349,17 @@ stages:
                   CertificateID: $(Credential)
                   PasswordID: $(Password)
 
-
+############################################################
+## DOES NOT WORK 
 ############################################################
 ## uploads: the *.sppkg package to the app-catalog
 ############################################################
 
-              - script: m365 spo app add --debug --verbose -p '$(Pipeline.Workspace)/spfx-package/$(SpPkgFilename)' --appCatalogUrl https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --overwrite
-                displayName: Upload to SharePoint package to the App Catalog
+#              - script: m365 spo app add --debug --verbose -p '$(Pipeline.Workspace)/spfx-package/$(SpPkgFilename)' --appCatalogUrl https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --overwrite
+#                displayName: Upload to SharePoint package to the App Catalog
 
 ############################################################
 ## deploys: the *.sppkg package to the app-catalog
 ############################################################
-              - script:  m365 spo app deploy --debug --verbose --name $(SpPkgFilename) -u https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --skipFeatureDeployment
-                displayName: Deploy to SharePoint package to the App Catalog
+#              - script:  m365 spo app deploy --debug --verbose --name $(SpPkgFilename) -u https://devgcx.sharepoint.com/sites/appcatalog --appCatalogScope tenant --skipFeatureDeployment
+#                displayName: Deploy to SharePoint package to the App Catalog
