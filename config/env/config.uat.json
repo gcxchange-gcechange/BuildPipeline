@@ -1,4 +1,22 @@
 {
-    "environment": "uat",
-    "description": "This is the uat environment"
+  "yoRc": {
+    "libraryId": "514066b8-c14d-499b-8162-ef7f5287ca9e" 
+  },
+  "packageSolution": {
+    "solution": {
+      "id": "514066b8-c14d-499b-8162-ef7f5287ca9e",
+      "name": "build-pipeline-client-side-solution-uat"
+    },
+    "paths": {
+    "zippedPackage": "solution/build-pipeline-uat.sppkg"
+    }
+  },
+  "webPartManifest": {
+  "id": "7ecf670e-3c4c-4dda-8993-1679f4459da9", 
+  "groupId": "5c03119e-3074-46fd-976b-c60198311f73", 
+  "title": {
+    "default": "HelloBuildPipeline-uat"
+    }
+  }
 }
+
