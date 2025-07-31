@@ -1,5 +1,24 @@
 // This file is auto-generated from config.dev.json
 export const EnvConfig = {
   "environment": "dev",
-  "description": "This is the dev environment"
+  "description": "This is the Dev environment",
+  "yoRc": {
+    "libraryId": "514066b8-c14d-499b-8162-ef7f5287ca9c"
+  },
+  "packageSolution": {
+    "solution": {
+      "id": "514066b8-c14d-499b-8162-ef7f5287ca9c",
+      "name": "build-pipeline-client-side-solution-dev"
+    },
+    "paths": {
+      "zippedPackage": "solution/build-pipeline-dev.sppkg"
+    }
+  },
+  "webPartManifest": {
+    "id": "7ecf670e-3c4c-4dda-8993-1679f4459da7",
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f71",
+    "title": {
+      "default": "HelloBuildPipeline-dev"
+    }
+  }
 };
