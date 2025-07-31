@@ -66,6 +66,7 @@ stages:
 
         - script: |
             echo "Injecting libraryId from $CONFIG_FILE into .yo-rc.json"
+            CONFIG_FILE="config/env/config.$(buildEnv).json"
             LIBRARY_ID=$(jq -r '.yoRc.libraryId' $CONFIG_FILE)
             jq --arg libId "$LIBRARY_ID" '.["@microsoft/generator-sharepoint"].libraryId = $libId' .yo-rc.json > temp.json && mv temp.json .yo-rc.json
           displayName: Inject libraryId to .yo-rc.json for Build
@@ -74,6 +75,7 @@ stages:
 
         - script: |
             echo "Reading id, name, zippedPackage from $CONFIG_FILE"
+            CONFIG_FILE="config/env/config.$(buildEnv).json"
             ID=$(jq -r '.packageSolution.solution.id' $CONFIG_FILE)
             NAME=$(jq -r '.packageSolution.solution.name' $CONFIG_FILE)
             ZIPPED_PACKAGE=$(jq -r '.packageSolution.paths.zippedPackage' $CONFIG_FILE)
@@ -84,6 +86,7 @@ stages:
         
         - script: |
             echo "Injecting id, name, zippedPackage from $CONFIG_FILE into package-solution.json"
+            CONFIG_FILE="config/env/config.$(buildEnv).json"
             ID=$(jq -r '.packageSolution.solution.id' $CONFIG_FILE)
             jq --arg id "$ID" '.solution.id = $id' config/package-solution.json > temp.json && mv temp.json config/package-solution.json
             NAME=$(jq -r '.packageSolution.solution.name' $CONFIG_FILE)
@@ -96,6 +99,7 @@ stages:
         
         - script: |
             echo "Reading id, title, and groupId from webPartManifest"
+            CONFIG_FILE="config/env/config.$(buildEnv).json"
             MANIFEST_ID=$(jq -r '.webPartManifest.id' $CONFIG_FILE)            
             TITLE=$(jq -r '.webPartManifest.title' $CONFIG_FILE)
             GROUP_ID=$(jq -r '.webPartManifest.groupId' $CONFIG_FILE)
@@ -106,6 +110,7 @@ stages:
 
         - script: |
             echo "Injecting id, title, and groupId from $CONFIG_FILE into .manifest.json"
+            CONFIG_FILE="config/env/config.$(buildEnv).json"
             MANIFEST_PATH=src/webparts/helloBuildPipeline/HelloBuildPipelineWebPart.manifest.json
             MANIFEST_ID=$(jq -r '.webPartManifest.id' $CONFIG_FILE)
             jq --arg manifestid "$MANIFEST_ID" '.id = $manifestid' "$MANIFEST_PATH" > temp.json && mv temp.json "$MANIFEST_PATH"
