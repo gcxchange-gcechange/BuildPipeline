@@ -31,5 +31,8 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx"
+  ],
+  "exclude": [
+    "**/generatedConfig.ts"
   ]
 }
