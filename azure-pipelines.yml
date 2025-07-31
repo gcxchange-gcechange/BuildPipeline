@@ -3,8 +3,20 @@ trigger:
     include: 
       - main
 
+parameters:
+  - name: environment
+    displayName: Environment Build In
+    type: string
+    default: dev
+    values: 
+      - dev
+      - uat
+      - prod
+
 variables:
-   - group: certificateCredential
+  - name: buildEnv
+    value: ${{ parameters.environment }}
+  - group: certificateCredential
 
 stages:
 ############################################################
@@ -26,6 +38,12 @@ stages:
             versionSpec: '16.13.0' # Specify the Node.js version to use
         - script: npm ci
           displayName: Install npm dependencies 
+
+        - script: |
+            echo "Setting BUILD_ENV for environment in: $(buildEnv)"
+            export BUILD_ENV=$(buildEnv)
+            gulp generate-config 
+          displayName: Generate the environment config
 
 ############################################################
 ## updates the configs
@@ -169,6 +187,7 @@ stages:
 - stage: Dev_Deployment
   dependsOn:
     - Build
+  condition: eq(variables['buildEnv'], 'dev')
   variables:
     SpPkgFilename: $[StageDependencies.Build. build_package.outputs['GetSharePointPackage.SpPkgFilename']]
 
