@@ -20,5 +20,10 @@
         "title": {
             "default": "HelloBuildPipeline-dev"
         }
+    }, 
+    "appConfig": {
+        "clientId": "f2b4c8e1-1d2b-4c3a-9f4e-1a2b3c4d5e6f", 
+        "functionAppUrl": "https://your-dev-function-app.azurewebsites.net/api/", 
+        "sharePointListName": "DevList"
     }
 }

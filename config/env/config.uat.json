@@ -20,5 +20,10 @@
         "title": {
             "default": "HelloBuildPipeline-uat"
         }
+    },
+    "appConfig": {
+        "clientId": "b1c2d3e4-f5g6-7h8i-9j0k-l1m2n3o4p5q6", 
+        "functionAppUrl": "https://your-uat-function-app.azurewebsites.net/api/", 
+        "sharePointListName": "UATList"
     }
 }
